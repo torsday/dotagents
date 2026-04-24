@@ -69,6 +69,7 @@ for dir in "${skills[@]}"; do
   fm_name=$(printf '%s\n' "$fm" | awk -F': *' '/^name:/{print $2; exit}')
   fm_desc=$(printf '%s\n' "$fm" | awk '/^description:/{sub(/^description: */, ""); print; exit}')
   fm_compat=$(printf '%s\n' "$fm" | awk -F': *' '/^compatibility:/{print $2; exit}')
+  fm_model=$(printf '%s\n' "$fm" | awk -F': *' '/^model:/{print $2; exit}')
 
   # name
   if [[ -z "$fm_name" ]]; then
@@ -91,6 +92,13 @@ for dir in "${skills[@]}"; do
   # compatibility (warning only — optional per OpenCode spec)
   if [[ "$fm_compat" != "opencode" ]]; then
     warn "$skill_file: compatibility is '${fm_compat:-<missing>}' (convention is 'opencode')"
+  fi
+
+  # model (optional) — provider-agnostic; only check the field is non-empty
+  # when the key is present. Model IDs vary by environment (Claude, Qwen,
+  # MiniMax, etc.) so we don't constrain the value here.
+  if grep -q '^model:' <<< "$fm" && [[ -z "$fm_model" ]]; then
+    warn "$skill_file: 'model:' key present but value is empty"
   fi
 done
 

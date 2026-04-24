@@ -4,6 +4,16 @@ All notable changes to this library are recorded here. Format follows [Keep a Ch
 
 ## [Unreleased]
 
+### Added
+
+- **`opencode.json`** — checked-in permissions config and three pre-built custom agents (`review`, `ship`, `groomer`) so clone-to-`~/.agents` is zero-configuration
+
+### Changed
+
+- `review-mr/SKILL.md` — added a note for Claude Code users (the built-in `/review` command covers the same intent); step 1 now mentions `glab mr diff` explicitly
+- `templates/SKILL-template.md` — added `model:` as a documented optional frontmatter field with guidance on when to use it vs. leaving tier choice in prose; kept provider-agnostic so Claude, Qwen, MiniMax, and other environments can all pin their own model IDs
+- `scripts/validate-skills.sh` — new `model:` frontmatter check: warns when the key is present but empty, without constraining which provider's model IDs are valid
+
 ## [0.1.0] — 2026-04-24
 
 ### Added
