@@ -54,7 +54,7 @@ Most work types have two skills: a **local** variant (no tracker ceremony, good 
 ## Dependency chain
 
 ```
-/spec → /tasking → /tracker-init → /ship-next ─────────────────→ /release-notes
+/spec → /tasking → /tracker-init → /ship-next ──────────────────→ /release-notes
                                   │
                      ┌────────────┤
                      │            │
