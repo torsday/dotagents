@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
-# validate-skills.sh — verify every SKILL.md against the OpenCode contract
-# and confirm cross-references between skills and shared helpers resolve.
+# validate-skills.sh — verify every SKILL.md against the OpenCode Agent Skills
+# contract (https://opencode.ai/docs/skills) and confirm cross-references
+# between skills and shared helpers resolve.
 #
 # Exits 0 on clean, non-zero on any validation failure.
 #
-# Checks:
-#   - Frontmatter: name (kebab-case, matches directory), description (non-empty,
-#     ≤1024 chars), compatibility (warn if not "opencode")
+# Checks (per OpenCode spec):
+#   - Filename is exactly "SKILL.md" (caps) — enforced even on
+#     case-insensitive filesystems
+#   - Frontmatter `name`: kebab-case (^[a-z0-9]+(-[a-z0-9]+)*$),
+#     1–64 chars, matches directory
+#   - Frontmatter `description`: 1–1024 chars
+#   - Frontmatter `compatibility`: "opencode" (warning only, optional)
 #   - Cross-references: every (skills/<name>/SKILL.md) and (shared/<name>.md)
 #     link in any markdown file resolves to an existing file
 #   - Bare `shared/<name>.md` prose references also resolve
@@ -43,6 +48,16 @@ for dir in "${skills[@]}"; do
     continue
   fi
 
+  # Enforce exact filename case — matters on case-insensitive filesystems
+  # (macOS default) where `skill.md` would pass `-f SKILL.md` but fail on
+  # Linux CI. Use `find -iname` to catch any case variant and compare.
+  while IFS= read -r wrong; do
+    base="${wrong##*/}"
+    if [[ "$base" != "SKILL.md" ]]; then
+      err "$dir: filename must be exactly 'SKILL.md' — found '$base'"
+    fi
+  done < <(find "$dir" -maxdepth 1 -type f -iname 'skill.md' 2>/dev/null)
+
   # Extract the first frontmatter block (lines between the first two --- lines)
   fm=$(awk 'BEGIN{inside=0} /^---$/{inside++; next} inside==1{print}' "$skill_file")
 
@@ -62,6 +77,8 @@ for dir in "${skills[@]}"; do
     err "$skill_file: frontmatter name '$fm_name' does not match directory '$name'"
   elif ! [[ "$fm_name" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
     err "$skill_file: name '$fm_name' does not match ^[a-z0-9]+(-[a-z0-9]+)*\$"
+  elif (( ${#fm_name} < 1 || ${#fm_name} > 64 )); then
+    err "$skill_file: name '$fm_name' is ${#fm_name} chars (OpenCode spec: 1-64)"
   fi
 
   # description
