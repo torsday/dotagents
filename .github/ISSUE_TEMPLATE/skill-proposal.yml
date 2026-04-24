@@ -1,0 +1,71 @@
+name: Skill proposal
+description: Propose a new skill for the library
+labels: ["feature", "skill-proposal"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Proposed skill name
+      description: kebab-case, matches the pattern `^[a-z0-9]+(-[a-z0-9]+)*$`
+      placeholder: "e.g. api-mock-generator"
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: One-sentence description
+      description: Specific enough for an agent to choose this skill over its siblings. ≤ 1024 chars.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What recurring task does this skill make an agent do consistently?
+      description: A skill is a repeatable unit of engineering work. Describe the task, not a general topic.
+    validations:
+      required: true
+
+  - type: textarea
+    id: protocol
+    attributes:
+      label: Rough protocol
+      description: Numbered steps the agent would follow. Not full prose — a sketch.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: overlap
+    attributes:
+      label: Overlap with existing skills
+      description: Which existing skills cover adjacent territory? Why can't they be extended instead?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: loop-safe
+    attributes:
+      label: Loop-safe?
+      description: Can this skill recognize its own terminal state and emit a `Loop exit: …` phrase?
+      options:
+        - "Yes — has a clear stopping condition"
+        - "No — invoked per task, not in a loop"
+        - "Unsure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tracker
+    attributes:
+      label: Tracker dependency
+      options:
+        - "None — agent-agnostic, no tracker"
+        - "GitLab-wired (ship-* style)"
+        - "Other (explain in protocol)"
+    validations:
+      required: true

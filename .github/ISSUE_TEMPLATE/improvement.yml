@@ -1,0 +1,40 @@
+name: Improvement
+description: Sharpen an existing skill, helper, or tooling
+labels: ["chore"]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: Target
+      description: Which skill, helper, or file would this improve?
+      placeholder: "skills/ship-next/SKILL.md  or  README.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior / content
+      description: What's there today that falls short?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed change
+      description: What should be different, and why?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Breaking change?
+      description: Would this change a skill's name, remove a section other skills reference, or change behavior downstream skills depend on?
+      options:
+        - "No"
+        - "Yes — requires a minor version bump per SemVer"
+        - "Unsure"
+    validations:
+      required: true

@@ -1,0 +1,49 @@
+name: Bug
+description: Something in this library doesn't work as documented
+labels: ["bug"]
+body:
+  - type: input
+    id: affected
+    attributes:
+      label: Affected skill or file
+      placeholder: "skills/ship-next/SKILL.md  or  scripts/validate-skills.sh"
+    validations:
+      required: true
+
+  - type: input
+    id: harness
+    attributes:
+      label: Agent harness and version
+      placeholder: "OpenCode 0.x / Claude Code / other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What I expected
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened
+      description: Include any error output, unexpected behavior, or the agent's incorrect action.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, shell, `git`/`glab`/`gh` versions if relevant
