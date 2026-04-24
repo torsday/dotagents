@@ -1,5 +1,10 @@
 # Agents · Skills
 
+[![Validate](https://github.com/torsday/dotagents/actions/workflows/validate.yml/badge.svg)](https://github.com/torsday/dotagents/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![OpenCode-compatible](https://img.shields.io/badge/opencode-compatible-6366f1)](https://opencode.ai/docs/skills)
+[![36 skills](https://img.shields.io/badge/skills-36-0e8a16)](registry.md)
+
 A curated library of agent-agnostic **skills** — reusable, invocable prompts that teach any LLM coding agent how to do one specific software-engineering job well.
 
 Each skill is a single `SKILL.md` that documents a recurring task: write an ADR, decompose a spec, audit a CI pipeline, ship a bug fix through the tracker. The agent reads the skill, follows the protocol, and applies the standards. No skill files are copy-pasted into prompts; they are discovered and invoked by the agent harness.
@@ -184,7 +189,54 @@ The project path takes priority over the global path during discovery.
 
 ### Using with OpenCode
 
-Skills are listed by the `skill` tool and invoked via `skill({ name: "<skill-name>" })`. See [OpenCode's skill configuration](https://opencode.ai/docs/skills) for permission rules (`opencode.json` → `permission.skill`).
+Skills appear in the `skill` tool listing (OpenCode surfaces the `name` + `description` of each) and are invoked via `skill({ name: "<skill-name>" })`. No configuration needed — OpenCode discovers `~/.agents/skills/` as the global agent-compatible path per its [skills spec](https://opencode.ai/docs/skills).
+
+**Recommended permissions** for this library — save as `opencode.json` in your project root (or merge with existing config):
+
+```json
+{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "ship-next": "ask",
+      "ship-refactor": "ask",
+      "ship-debug": "ask",
+      "overhaul": "ask",
+      "groom": "ask"
+    }
+  }
+}
+```
+
+Rationale:
+
+- **Default `allow`** — most skills read, analyze, or write scoped edits. Low risk, high friction if gated.
+- **`ship-*` → `ask`** — each run branches, commits, pushes, opens an MR, and merges. Worth confirming at least the first time per project.
+- **`overhaul` → `ask`** — full structural restructure with large blast radius. Never a "sure, go" operation.
+- **`groom` → `ask`** — batch-modifies up to 50 issues per pass. Easy to confirm, harder to undo.
+
+For a read-only agent (e.g. an auditor that should never mutate state), invert the defaults:
+
+```json
+{
+  "permission": {
+    "skill": {
+      "*": "deny",
+      "coding": "allow",
+      "review-mr": "allow",
+      "security-audit": "allow",
+      "agent-audit": "allow",
+      "feature-review": "allow",
+      "refactor": "allow",
+      "systems-design": "allow",
+      "spec": "allow",
+      "postmortem": "allow"
+    }
+  }
+}
+```
+
+Per-agent overrides (custom agents) work the same way — see [OpenCode's permissions docs](https://opencode.ai/docs/skills) for the full schema.
 
 ### Using with Claude Code
 
