@@ -7,6 +7,12 @@ Contract (enforced by scripts/validate-skills.sh):
   - `name` must match the directory name and `^[a-z0-9]+(-[a-z0-9]+)*$`
   - `description` must be ≤ 1024 chars and specific enough to aid agent selection
   - `compatibility: opencode` signals the OpenCode Agent Skills contract
+  - `model` (optional) pins OpenCode to a specific model ID for this skill;
+    use for skills that genuinely need deep reasoning (e.g. security-audit).
+    Omit for tier-conditional skills — they surface the tier choice in prose
+    so any capable model can execute them. Model IDs are environment-specific
+    (Claude, Qwen, MiniMax, etc.) — the validator only checks the field is
+    non-empty, not which provider it names.
 
 After copying, delete this HTML comment.
 -->
@@ -14,6 +20,7 @@ After copying, delete this HTML comment.
 name: <kebab-case-name-matches-directory>
 description: <one-sentence statement — specific enough for an agent to decide whether to invoke, ≤1024 chars>
 compatibility: opencode
+# model: <provider-specific-model-id>   # uncomment to pin model; omit for tier-conditional skills
 ---
 
 <One-sentence opening. Skip fluff. A reader should know in five seconds whether this is the right skill for the task at hand.>

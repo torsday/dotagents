@@ -12,12 +12,15 @@ Looking at the diff, review these changes as a thorough, constructive code revie
 > [!NOTE]
 > **When NOT to use:** Don't use as a substitute for owning quality in code you wrote — fix known issues before requesting review. Don't use to review uncommitted or unfinished changes; the diff should represent a complete, working increment.
 
+> [!NOTE]
+> **Claude Code users:** Claude Code's built-in `/review` command invokes the same intent. This skill (`/review-mr`) is the library's explicit version and works identically in both Claude Code and OpenCode.
+
 ## Protocol
 
 > [!TIP]
 > For the most objective review, run this in a fresh session or a clean subagent — the reviewer won't be biased toward code it just wrote. Isolating the review in its own context window produces cleaner, more independent findings.
 
-1. Run `git diff main...HEAD` (or review the provided diff — for an MR, `glab mr diff <iid>` works).
+1. Run `git diff main...HEAD` (or review the provided diff — for a GitLab MR, `glab mr diff <iid>`; for a GitHub PR, `gh pr diff <number>`).
 2. Read any context files needed to understand the change fully.
 3. Produce findings organized by severity.
 4. Do not apply fixes — produce feedback only.

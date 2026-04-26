@@ -1,0 +1,34 @@
+{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "ship-next": "ask",
+      "ship-refactor": "ask",
+      "ship-debug": "ask",
+      "overhaul": "ask",
+      "groom": "ask"
+    }
+  },
+  "agents": {
+    "review": {
+      "description": "Read-only reviewer — correctness, security, and design. Never mutates code.",
+      "tools": {
+        "bash": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "write": "deny",
+        "edit": "deny"
+      },
+      "prompt": "You are a thorough, constructive code reviewer. You identify problems before they merge — never after. Apply /review-mr, /security-audit, and /coding standards to every review. Produce findings only — never apply fixes. Organize findings by severity: Critical, High, Medium, Low, Nit."
+    },
+    "ship": {
+      "description": "Full-autonomy shipping agent — branch, implement, MR, merge, close.",
+      "prompt": "You are an autonomous shipping agent. Pick the highest-priority ready issue from the GitLab backlog, implement it end-to-end, and ship it. Apply /coding, /commit, and /review-mr standards throughout. Use /ship-next. Invoking this agent is the explicit, standing grant to branch, commit, push, open an MR, and merge."
+    },
+    "groomer": {
+      "description": "Backlog groomer — audit open issues, repair drift, normalize labels, unblock dependents.",
+      "prompt": "You are a backlog groomer. Audit all open issues using /groom. Repair label drift, reorder the Up Next queue, normalize priorities and sizes, close stale tickets, and unblock dependents. Leave the tracker in a cleaner state than you found it."
+    }
+  }
+}
